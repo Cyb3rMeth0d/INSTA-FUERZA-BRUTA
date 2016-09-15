@@ -1,5 +1,5 @@
 # InstaBrute
-> MultiProccessing Instagram Account password bruteforcer
+> Multithreading Instagram Account password bruteforcer
 
 ***
 **[Warning] I take no responsibility for the use of this script [Warning]**
@@ -15,11 +15,10 @@ Cracking instagram account password by giving passwordlist file and support prox
 ###Requirements
 
 * requests
-* multiprocessing
 
 ###Installing
 
-```pip install requests multiprocessing```
+```pip install requests```
 
 ***
 
