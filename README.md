@@ -8,17 +8,13 @@ Cracking instagram account password by giving passwordlist file and support prox
 
 ###Usage
 
-```./instabrute.py <username> <wordlist> <proxylist> <thread>```
+```./instabrute.py [-h] -u USERNAME -w WORD -p PROXY [-t THREAD] [-v] [-d]```
 
-``` ./instabrute.py netcat words.txt proxy.txt 4```
+``` ./instabrute -u user_test -w words.txt -p proxys.txt -t 4 -d -v```
 
 ###Requirements
 
-* requests
-
-###Installing
-
-```pip install requests```
+* Noting :)
 
 ***
 
