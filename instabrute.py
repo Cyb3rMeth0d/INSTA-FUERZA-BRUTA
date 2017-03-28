@@ -266,6 +266,7 @@ def check_avalaible_proxys(proxys):
     print(bcolors.WARNING + "[-] Testing Proxy List...\n" + bcolors.ENDC)
 
     proxys_working_list = {}
+    max_thread = THREAD
 
     queue = Queue.Queue()
     queuelock = threading.Lock()
@@ -276,7 +277,7 @@ def check_avalaible_proxys(proxys):
 
     while not queue.empty():
         queuelock.acquire()
-        for workers in range(7):
+        for workers in range(max_thread):
             t = threading.Thread(target=check_proxy, args=(queue,))
             t.setDaemon(True)
             t.start()
