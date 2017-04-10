@@ -51,3 +51,8 @@ Cracking instagram account password by giving password list file and support pro
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
+## Donate :)
+
+![Bitcoin Donate Button](https://www.drupal.org/files/project-images/bitcoindonate.png)
+
+Address : **16DVYPdR9sBBREvtzMEHbM1wTTHLTUgFNr**
