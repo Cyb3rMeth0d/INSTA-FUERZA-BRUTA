@@ -1,58 +1,40 @@
-# InstaBrute
-> Multithreading Instagram Account password bruteforcer
+# Fuerz Bruta
+> Multithreading Instagram Fuerza Bruta Instagram By Cyb3rMeth0d
 
-![stability stable](http://b.repl.ca/v1/stability-stable-brightgreen.png)
 
-    .-------------------------------------------------------.
-    | |\___/|       ___           _                         |
-    | )     (      |_ _|_ __  ___| |_ __ _                  |
-    |=\     /=      | || '_ \/ __| __/ _` |                 |
-    |  )===(        | || | | \__ \ || (_| |                 |
-    | /     \      |___|_| |_|___/\__\__,_|                 |
-    | |     |                                               |
-    |/       \           _     ____  _   _ _____ _____      |
-    |\       /          | |__ |  _ \| | | |_   _| ____|     |
-    | \__  _/           | '_ \| |_) | | | | | | |  _|       |
-    |   ( (             | |_) |  _ <| |_| | | | | |___      |
-    |    ) )            |_.__/|_| \_\_____/ |_| |_____|     |
-    |   (_(                                                 |
-    '-------------------------------------------------------'
+                                ......                                  
+                            .:||||||||:.                                 
+                           /            \                                
+                          (   o      o   )                               
+                --@@@@----------:  :----------@@@@--                    
+                          Cyb3rMeth0d V1                                 
+                                                                        
+           ___       ___  __  __          __   __       ___              
+          |__  |  | |__  |__)  /  /\     |__) |__) |  |  |   /\          
+          |    \__/ |___ |  \ /_ /~~\    |__) |  \ \__/  |  /~~\ 
     
 
-**[Warning] I take no responsibility for the use of this script [Warning]**
+**[Aviso] No me hago responsble del uso del Script [Aviso]**
 
-Cracking instagram account password by giving password list file and support proxy
+Descifrando la contraseña de la cuenta de instagram al dar el archivo de lista de contraseñas y el proxy de soporte
 
-### Usage
+### Uso
 
-```./instabrute.py [-h] -u USERNAME -w WORD -p PROXY [-t THREAD] [-v] [-d]```
+```./Fuerza-Bruta.py [-h] -u USUARIO -w CONTRASEÑA.TXT -p PROXY.TXT [-t THREAD] [-v] [-d]```
 
-``` ./instabrute -u user_test -w words.txt -p proxys.txt -t 4 -d -v```
+``` ./FuerzaBruta -u Usuario -w Contraseña.txt -p Proxy.txt -t 8```
 
-### Requirements
+### Requisitos
 
-* Noting :)
+* Ninguno :)
 
 ### TODO
 
-- [x] Remove additional dependencies
-- [x] Add support for both python 3 and 2
-- [x] Add log and verbose option
-- [ ] Multi account support (![#8](https://github.com/N3TC4T/InstaBrute/issues/8))
-- [ ] Save good proxies (![#7](https://github.com/N3TC4T/InstaBrute/issues/7))
-- [ ] GUI for script
+- [x] Eliminar dependencias adicionales
+- [x] Añadir soporte para python 3 y 2
+- [x] Agregu la opción de registro y verbosa
+- [ ] Soporte Multi-Cuenta
+- [ ] Página mejores Proxys Gratuitos https://free-proxy-list.net/
+- [ ] Descargar el Script en GUIHUB.COM
 
-
-## Contributing
-
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
-
-## Donate :)
-
-![Bitcoin Donate Button](https://www.drupal.org/files/project-images/bitcoindonate.png)
-
-Address : **16DVYPdR9sBBREvtzMEHbM1wTTHLTUgFNr**
+GRACIAS POR USAR EL SCRIPT
